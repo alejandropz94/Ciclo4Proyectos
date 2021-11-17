@@ -1,0 +1,1 @@
+Soy Johana Tafur, soy financista, de Bogotá y actualmente trabajo como analista financiera.
