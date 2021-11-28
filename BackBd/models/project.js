@@ -1,51 +1,52 @@
-const { Schema, model } = require('mongoose');
-const user = require('./user');
+import { Schema, model } from 'mongoose';
+import user from './user';
+const ObjectId = Schema.ObjectId;
 
 const projectSchema = Schema({
-    nombre:{
-        type:String,
-        required:true
-    },
-    presupuesto:{
-        type:Number,
+    id: ObjectId,
+    nombre: {
+        type: String,
         required: true
     },
-    fechaInicio:{
-        type:Date,
+    presupuesto: {
+        type: Number,
         required: true
     },
-    fechaFin:{
-        type:Date,
+    fechaInicio: {
+        type: Date,
         required: true
     },
-    estado:{
-        type:String,
-        enum:["Activo","Inactivo"],
-        default:"Inactivo"
+    fechaFin: {
+        type: Date
     },
-    fase:{
-        type:String,
-        enum:["Iniciado","En Desarollo","Terminado", "Null"],
-        default:"Null"
+    estado: {
+        type: String,
+        enum: ["Activo", "Inactivo"],
+        default: "Inactivo"
     },
-    lider:{
-        type:Schema.Types.ObjectId,
-        required:true,
-        ref:user
+    fase: {
+        type: String,
+        enum: ["Iniciado", "En Desarollo", "Terminado", "Null"],
+        default: "Null"
     },
-    objetivos:[
+    lider: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: user
+    },
+    objetivos: [
         {
-            descripcion:{
-                type:String,
-                required:true
+            descripcion: {
+                type: String,
+                required: true
             },
-            tipo:{
-                type:String,
-                required:true,
-                enum:["General","Especifico"]
+            tipo: {
+                type: String,
+                required: true,
+                enum: ["General", "Especifico"]
             }
         },
     ]
-})
+});
 
-module.exports = model('Project', projectSchema);
+export default model('Project', projectSchema);
