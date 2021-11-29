@@ -1,4 +1,5 @@
-const { Schema, model } = require('mongoose');
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
 
 const userSchema = Schema({
     correo:{
@@ -29,6 +30,22 @@ const userSchema = Schema({
         default:"PENDIENTE",
         enum:["PENDIENTE","AUTORIZADO","NO_AUTORIZADO"]
     }
-})
+},
+    {   
+        toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
+        toObject: { virtuals: true }, // So `console.log()` and other functions that use `toObject()` include virtuals
+     }
+);
 
-module.exports = model('User', userSchema);
+userSchema.virtual('proyectosLiderados', {
+    ref: 'Project',
+    localField: '_id',
+    foreignField: 'lider',
+  });
+
+const User = model('User', userSchema);
+
+export { User };
+
+
+
