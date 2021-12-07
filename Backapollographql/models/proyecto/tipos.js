@@ -1,6 +1,6 @@
 import { gql } from "apollo-server-express";
 
-const typeDefs = gql`
+const tiposProyecto = gql`
     type Query {
         getAllProjects: [Project]
     }
@@ -57,4 +57,4 @@ const typeDefs = gql`
     }
 `;
 
-export {typeDefs};
+export { tiposProyecto };

@@ -1,8 +1,8 @@
 import { gql } from "apollo-server-express";
 
-const tiposAvance = gql`
+const tiposInscripcion = gql`
     type Query {
-        getAllAvances: [Avance]
+        getAllInscripciones: [Inscripcion]
     }
 
     type Usuario {
@@ -32,28 +32,28 @@ const tiposAvance = gql`
         objetivos: [Objetivo]
     }
 
-    type Avance {
+    type Inscripcion {
         _id: ID
-        fecha: String!
-        descripcion: String!
-        observaciones: [String]
+        estado: String!
+        fechaIngreso: String!
+        fechaEgreso: String!
         proyecto: Project
-        creador: Usuario
+        usuario: Usuario
     }
 
-    input AvanceInput {
-        fecha: String!
-        descripcion: String!
-        observaciones: [String]
+    input InscripcionInput {
+        estado: String!
+        fechaIngreso: String!
+        fechaEgreso: String
         proyecto: ID
-        creador: ID
+        usuario: ID
     }
 
     type Mutation {
-        crearAvance(input: AvanceInput): Avance
-        borrarAvance(_id: ID): Avance
-        actualizarAvance(_id: ID, input: AvanceInput): Avance
+        crearInscripcion(input: InscripcionInput): Inscripcion
+        borrarInscripcion(_id: ID): Inscripcion
+        actualizarInscripcion(_id: ID, input: InscripcionInput): Inscripcion
     }
 `;
 
-export { tiposAvance };
+export { tiposInscripcion };

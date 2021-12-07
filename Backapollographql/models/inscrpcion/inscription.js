@@ -1,31 +1,36 @@
-const { Schema, model } = require('mongoose');
-const project = require('./project');
-const user = require('./user');
+import mongoose from 'mongoose';
+import { Project } from '../proyecto/proyecto.js';
+import { User } from '../usuario/usuario.js';
+const { Schema, model } = mongoose;
+const ObjectId = Schema.ObjectId;
 
 const inscriptionSchema = Schema({
-    estado:{
-        type:String,
-        enum:["Aceptado","Rechazado"],
-        required:true
+    id: ObjectId,
+    estado: {
+        type: String,
+        enum: ["Aceptado", "Rechazado"],
+        required: true
     },
-    fechaIngreso:{
-        type:Date,
-        required:true
+    fechaIngreso: {
+        type: Date,
+        required: true
     },
-    fechaEgreso:{
-        type:Date,
-        required:true
+    fechaEgreso: {
+        type: Date
     },
-    proyecto:{
-        type:Schema.Types.ObjectId,
-        ref:project,
-        required:true
+    proyecto: {
+        type: Schema.Types.ObjectId,
+        ref: Project,
+        required: true
     },
-    usuario:{
-        type:Schema.Types.ObjectId,
-        ref: user,
-        required:true
+    usuario: {
+        type: Schema.Types.ObjectId,
+        ref: User,
+        required: true
     }
 })
 
-module.exports = model("inscription", inscriptionSchema);
+
+const Inscription = model('Inscription', inscriptionSchema);
+
+export { Inscription };
