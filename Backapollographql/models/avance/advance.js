@@ -1,31 +1,36 @@
-const { Schema, model } = require('mongoose');
-const project = require('./project');
-const user = require('./user');
+import mongoose from 'mongoose';
+import { Project } from '../proyecto/proyecto.js';
+import { User } from '../usuario/usuario.js';
+const { Schema, model } = mongoose;
+const ObjectId = Schema.ObjectId;
 
 const advanceSchema = Schema({
-    fecha:{
-        type:Date,
-        required:true
+    id: ObjectId,
+    fecha: {
+        type: Date,
+        required: true
     },
-    descripcion:{
-        type:String,
-        required:true
+    descripcion: {
+        type: String,
+        required: true
     },
-    observaciones:[
+    observaciones: [
         {
-            type:String
+            type: String
         },
     ],
-    proyecto:{
-        type:Schema.Types.ObjectId,
-        required:true,
-        ref:project
+    proyecto: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: Project
     },
-    creador:{
-        type:Schema.Types.ObjectId,
-        ref:user,
-        required:true
+    creador: {
+        type: Schema.Types.ObjectId,
+        ref: User,
+        required: true
     }
 })
 
-module.exports = model('Advance', advanceSchema);
+const Advance = model('Advance', advanceSchema);
+
+export { Advance };

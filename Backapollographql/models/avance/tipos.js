@@ -1,8 +1,8 @@
 import { gql } from "apollo-server-express";
 
-const tiposProyecto = gql`
+const tiposAvance = gql`
     type Query {
-        getAllProjects: [Project]
+        getAllAvances: [Avance]
     }
 
     type Usuario {
@@ -13,17 +13,12 @@ const tiposProyecto = gql`
         correo: String       
         estado: Enum_estadoUsuario
         rol: Enum_rol
-      }  
-
-    input ObjetivoInput {
-        descripcion: String
-        tipo: String
-    }
+      }
 
     type Objetivo {
         descripcion: String
         tipo: String
-    }
+    }      
 
     type Project {
         _id: ID
@@ -35,26 +30,30 @@ const tiposProyecto = gql`
         fase: String
         lider: Usuario
         objetivos: [Objetivo]
+    }
 
-    }   
+    type Avance {
+        _id: ID
+        fecha: String!
+        descripcion: String!
+        observaciones: [String]
+        proyecto: Project
+        creador: Usuario
+    }
 
-    input ProjectInput {
-        nombre: String!
-        presupuesto: Int!
-        fechaInicio: String!
-        fechaFin: String
-        estado: String
-        fase: String
-        lider: ID
-        objetivos: [ObjetivoInput]
-
+    input AvanceInput {
+        fecha: String!
+        descripcion: String!
+        observaciones: [String]
+        proyecto: ID
+        creador: ID
     }
 
     type Mutation {
-        createProject(input: ProjectInput): Project
-        deleteProject(_id: ID): Project
-        updateProject(_id: ID, input: ProjectInput): Project
+        crearAvance(input: AvanceInput): Avance
+        borrarAvance(_id: ID): Avance
+        actualizarAvance(_id: ID, input: AvanceInput): Avance
     }
 `;
 
-export { tiposProyecto };
+export { tiposAvance };
