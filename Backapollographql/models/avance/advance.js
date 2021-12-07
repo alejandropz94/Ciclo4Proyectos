@@ -28,4 +28,6 @@ const advanceSchema = Schema({
     }
 })
 
-module.exports = model('Advance', advanceSchema);
+const Avances = model('Advance', advanceSchema);
+
+export {Avances}
