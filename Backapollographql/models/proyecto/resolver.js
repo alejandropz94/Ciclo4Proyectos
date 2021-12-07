@@ -1,10 +1,15 @@
 import { Project } from './proyecto.js'
+import mongoose from 'mongoose';
 
 export const resolverProyecto = {
     Query: {
         getAllProjects: async () => {
             const projects = await Project.find().populate("lider");
             return projects;
+        },
+        getProjectByLider: async (_, { _id }) => {
+            const project = await Project.find({lider: mongoose.Types.ObjectId(_id)});
+            return project;
         }
     },
     Mutation: {
