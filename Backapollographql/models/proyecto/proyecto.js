@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 const { Schema, model } = mongoose;
-import {User} from '../usuario/usuario.js'
+import { User } from '../usuario/usuario.js'
 const ObjectId = Schema.ObjectId;
 
 const projectSchema = Schema({

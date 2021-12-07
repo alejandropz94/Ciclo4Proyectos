@@ -3,8 +3,8 @@ import mongoose from 'mongoose';
 const dbConnection = async () => {
 
     try {
-        await mongoose.connect(process.env.BD_Access);
-        //await mongoose.connect('mongodb://localhost/ciclo4');
+        //await mongoose.connect(process.env.BD_Access);
+        await mongoose.connect('mongodb://localhost/ciclo4');
         console.log("Conexion Exitosa");
     } catch (error) {
         console.log(error);

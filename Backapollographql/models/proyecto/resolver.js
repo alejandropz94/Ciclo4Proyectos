@@ -1,4 +1,4 @@
-import {Project} from './proyecto.js'
+import { Project } from './proyecto.js'
 
 export const resolverProyecto = {
     Query: {
