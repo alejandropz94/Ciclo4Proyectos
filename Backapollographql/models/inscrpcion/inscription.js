@@ -13,7 +13,6 @@ const inscriptionSchema = Schema({
     },
     fechaIngreso: {
         type: Date,
-        required: true
     },
     fechaEgreso: {
         type: Date
