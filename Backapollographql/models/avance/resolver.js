@@ -24,5 +24,3 @@ export const resolverAvance = {
     }
 
 }
-
-export {resolverAvance}
