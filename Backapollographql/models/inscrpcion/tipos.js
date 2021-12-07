@@ -35,24 +35,32 @@ const tiposInscripcion = gql`
     type Inscripcion {
         _id: ID
         estado: String!
-        fechaIngreso: String!
-        fechaEgreso: String!
+        fechaIngreso: String
+        fechaEgreso: String
         proyecto: Project
         usuario: Usuario
     }
 
     input InscripcionInput {
         estado: String!
-        fechaIngreso: String!
+        fechaIngreso: String
         fechaEgreso: String
         proyecto: ID
         usuario: ID
     }
 
+    input InscripcionUpdate {
+        estado: String
+        fechaIngreso: String
+        fechaEgreso: String
+        proyecto: ID
+        usuario: ID
+    }    
+
     type Mutation {
         crearInscripcion(input: InscripcionInput): Inscripcion
         borrarInscripcion(_id: ID): Inscripcion
-        actualizarInscripcion(_id: ID, input: InscripcionInput): Inscripcion
+        actualizarInscripcion(_id: ID, input: InscripcionUpdate): Inscripcion
     }
 `;
 

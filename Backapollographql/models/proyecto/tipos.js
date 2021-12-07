@@ -2,7 +2,8 @@ import { gql } from "apollo-server-express";
 
 const tiposProyecto = gql`
     type Query {
-        getAllProjects: [Project]
+        getAllProjects: [Project],
+        getProjectByLider(_id: ID): [Project]
     }
 
     type Usuario {
@@ -50,10 +51,22 @@ const tiposProyecto = gql`
 
     }
 
+    input ProjectUpdate {
+        nombre: String
+        presupuesto: Int
+        fechaInicio: String
+        fechaFin: String
+        estado: String
+        fase: String
+        lider: ID
+        objetivos: [ObjetivoInput]
+
+    }
+
     type Mutation {
         createProject(input: ProjectInput): Project
         deleteProject(_id: ID): Project
-        updateProject(_id: ID, input: ProjectInput): Project
+        updateProject(_id: ID, input: ProjectUpdate): Project
     }
 `;
 
