@@ -1,0 +1,36 @@
+.header--style{
+    height: 5vh;
+    width: 100%;
+}
+.nv{
+    height: 95vh;
+}
+
+.log {
+    width: 450px;
+    background: #fff;
+    border-radius: 5px;
+  }
+
+  .contlogin{
+    width: 100%;  
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    background-image: -webkit-linear-gradient(bottom, #0250c5, #e60e0e);
+    /* background: #0250c5;
+    background: -webkit-linear-gradient(bottom, #0250c5, #e60e0e);
+    background: -moz-linear-gradient(bottom, #0250c5, #e60e0e);
+    background: linear-gradient(bottom, #0250c5, #e60e0e); */
+  }
+
+h2#titulo{
+  text-align: center;
+}
+
+div.container--goog{
+  font-family: 'Google Sans','Noto Sans Myanmar UI',arial,sans-serif;
+}
+  
