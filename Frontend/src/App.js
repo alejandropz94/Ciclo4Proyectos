@@ -6,19 +6,40 @@ import {
 } from 'react-router-dom';
 import './App.css';
 import './styles/estilos.css';
+import { ApolloProvider, ApolloClient,InMemoryCache } from '@apollo/client';
 import MainProyectos from './components/proyectos/MainProyectos';
+import MainUsuarios from './components/usuarios/MainUsuarios';
+import Register from './components/auth/Register';
+import Login from './components/auth/Login';
 
 
 function App() {
+  const client = new ApolloClient({
+    uri: `${process.env.REACT_APP_API_URL}/graphql`,
+    cache: new InMemoryCache(),
+  });
+
+
   return (
-    <Router>
-      <Routes>
-        <Route exact="true" path="/proyectos" element={<MainProyectos />} >
-        </Route>
-      </Routes>
-    </Router>
+      <ApolloProvider client={client}>
+          <Router>
+            <Routes>
+            <Route exact="true" path="/" element={<Login/>} >
+              </Route>
+            <Route exact="true" path="/auth/register" element={<Register />} >
+              </Route>
+              
+              <Route exact="true" path="/proyectos" element={<MainProyectos />} >
+              </Route>
+
+              <Route exact="true" path="/usuarios" element={<MainUsuarios />} >
+              </Route>
+            </Routes>
+          </Router>
+      </ApolloProvider>
 
   );
+
 }
 
 export default App;
