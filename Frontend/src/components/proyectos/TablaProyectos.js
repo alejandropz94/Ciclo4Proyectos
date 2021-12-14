@@ -5,17 +5,34 @@ import FilaTabla from './FilaTabla';
 import {
     ApolloClient,
     InMemoryCache,
-    gql
+    gql, createHttpLink
 } from "@apollo/client";
+
+import { setContext } from '@apollo/client/link/context';
 
 import notie from 'notie';
 import 'notie/dist/notie.css';
 
 function TablaProyectos() {
+
+    // const httpLink = createHttpLink({
+    //     uri: '/graphql',
+    //   });
+
+    //   const authLink = setContext((_, { headers }) => {
+    //     const token = localStorage.getItem('token');
+    //     return {
+    //       headers: {
+    //         authorization: token ? `${token}` : "",
+    //       }
+    //     }
+    //   });      
+
     const client = new ApolloClient({
         uri: `${process.env.REACT_APP_API_URL}/graphql`,
         cache: new InMemoryCache()
-    });
+    });    
+    
     const QUERY_GETPROJECT = gql`
     query GetProject($_id: ID) {
         getProject(_id: $_id) {
@@ -41,6 +58,20 @@ function TablaProyectos() {
         }
       }`;
 
+      const CREATE_PROJECT = gql`
+      mutation Mutation($input: ProjectInput) {
+        createProject(input: $input) {
+          nombre
+          presupuesto
+          fechaInicio
+          fechaFin
+          estado
+          fase
+          lider {
+            _id
+          }
+        }
+      }`;
     const [idProyectoEditar, setIdProyectoEditar] = useState("");
 
     function getDataEditar(val) {
@@ -73,12 +104,14 @@ function TablaProyectos() {
     const handleSubmit = e => {
         e.preventDefault();
         const proyecto = {
-            presupuesto,
-            fechaInicio,
-            fechaFin,
+            nombre,
+            presupuesto: Number(presupuesto),
+            fechaInicio: fechaInicio == "" ? null : fechaInicio,
+            fechaFin: fechaFin == "" ? null : fechaFin,
             estado,
             fase
         };
+        proyecto["lider"] = localStorage.getItem("id");
         if (editar) {
             client.mutate({
                 mutation: UPDATE_PROJECT,
@@ -91,6 +124,22 @@ function TablaProyectos() {
                 notie.alert({
                     type: 'success',
                     text: "Proyecto actualizado correctamente",
+                });
+                setTimeout(() => { window.location.href = "/proyectos" }, 1500);
+            }).catch(error => {
+                console.log(error);
+            });
+        }else{
+            client.mutate({
+                mutation: CREATE_PROJECT,
+                variables: {
+                    input: proyecto
+                }
+            }).then(result => {
+                document.querySelector('.closeModalProyecto').click();
+                notie.alert({
+                    type: 'success',
+                    text: "Proyecto ingresado correctamente",
                 });
                 setTimeout(() => { window.location.href = "/proyectos" }, 1500);
             }).catch(error => {
@@ -115,13 +164,14 @@ function TablaProyectos() {
                         setPresupuesto(proyecto.presupuesto);
                         setFase(proyecto.fase);
                         setEstado(proyecto.estado);
-
-                        let dateString = new Date(Number(proyecto.fechaInicio)).toLocaleDateString("en-US");
-                        let dateString2 = new Date(Number(proyecto.fechaFin)).toLocaleDateString("en-US");
-                        let auxDate = dateString.split("/");
-                        let auxDate2 = dateString2.split("/");
-                        setFechaInicial(auxDate[2] + "-" + auxDate[1] + "-" + auxDate[0]);
-                        setFechaFinal(auxDate2[2] + "-" + auxDate2[1] + "-" + auxDate2[0])
+                        if(proyecto.fechaInicio != null) {
+                            let dateString = new Date(Number(proyecto.fechaInicio)).toISOString().split("T")[0];
+                            setFechaInicial(dateString);
+                        }
+                        if(proyecto.fechaFin != null) {
+                            let dateString2 = new Date(Number(proyecto.fechaFin)).toISOString().split("T")[0];
+                            setFechaFinal(dateString2);
+                        }
                     });
             } catch (error) {
                 console.log(error);
@@ -133,9 +183,14 @@ function TablaProyectos() {
     }
 
     let isDisabled = false;
-    if (fechaFin === "" || estado === "" || fase === "") {
+    if (editar && (fechaInicio === "" || estado === "" || fase === "")) {
         isDisabled = true;
-    } else {
+        console.log("entra por editar");
+    } else if (!editar && (nombre == "" || presupuesto == "" || fechaInicio === "" || estado === "" || fase === "")) {
+        isDisabled = true;
+        console.log("entra por ingresar");
+    }
+    else {
         isDisabled = false;
     }
     return (
@@ -203,8 +258,8 @@ function TablaProyectos() {
                                 <div className="modal-body">
                                     <div className="row">
                                         <div className="mb-3">
-                                            <label htmlFor="nombre" className="form-label">Nombre:</label>
-                                            <input type="text" className="form-control" id="nombre"
+                                            <label htmlFor="nombree" className="form-label">Nombre:</label>
+                                            <input type="text" className="form-control" id="nombree"
                                                 onChange={e => setNombre(e.target.value)}
                                                 value={nombre} />
                                         </div>
@@ -222,13 +277,13 @@ function TablaProyectos() {
                                             <label htmlFor="fechaInicio" className="form-label">Fecha inicio:</label>
                                             <input type="date" className="form-control" id="fechaInicio"
                                                 onChange={e => setFechaInicial(e.target.value)}
-                                                value={fechaInicio} defaultValue={fechaInicio} />
+                                                value={fechaInicio} />
                                         </div>
                                         <div className="col">
                                             <label htmlFor="fechaFin" className="form-label">Fecha fin:</label>
                                             <input type="date" className="form-control" id="fechaFin"
                                                 onChange={e => setFechaFinal(e.target.value)}
-                                                value={fechaFin} defaultValue={fechaFin} />
+                                                value={fechaFin} />
                                         </div>
                                     </div>
                                     <div className="row">
