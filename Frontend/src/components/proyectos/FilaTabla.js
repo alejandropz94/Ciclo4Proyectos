@@ -11,23 +11,25 @@ function FilaTabla(props) {
         uri: `${process.env.REACT_APP_API_URL}/graphql`,
         cache: new InMemoryCache()
     });
-    const QUERY_GETALLPROJECTS = gql`
-    query GetAllProjects {
-        getAllProjects {
+    
+    const QUERY_GETPROJECTSBYLIDER = gql`
+    query Query($id: ID) {
+        getProjectsByLider(_id: $id) {
           _id
           nombre
           presupuesto
           fechaInicio
           fechaFin
           estado
-          lider {
-            _id
-            nombre
-          }
           fase
           objetivos {
             descripcion
             tipo
+          }
+          lider {
+            _id
+            nombre
+            apellido
           }
         }
       }`
@@ -43,10 +45,12 @@ function FilaTabla(props) {
         try {
             client
                 .query({
-                    query: QUERY_GETALLPROJECTS
+                    query: QUERY_GETPROJECTSBYLIDER,
+                    variables: { id: localStorage.getItem("id")}
                 })
                 .then(result => {
-                    setProyectos(result.data.getAllProjects)
+                    console.log(result);
+                    setProyectos(result.data.getProjectsByLider);
                 });
         } catch (error) {
             console.log(error);
@@ -63,7 +67,7 @@ function FilaTabla(props) {
                 <td>{proyecto._id}</td>
                 <td>{proyecto.nombre}</td>
                 <td>{proyecto.presupuesto}</td>
-                <td>{proyecto.lider.nombre}</td>
+                <td>{proyecto.lider.nombre} {proyecto.lider.apellido}</td>
                 <td>{new Date(Number(proyecto.fechaInicio)).toLocaleDateString("en-US")}</td>
                 <td>{proyecto.estado}</td>
                 <td>{proyecto.fase}</td>

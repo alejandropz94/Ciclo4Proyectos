@@ -24,6 +24,7 @@ const Register = () => {
         if(dataMutation){
             if(dataMutation.registro.token){
                 localStorage.setItem("token", dataMutation.registro.token);
+                localStorage.setItem("id", dataMutation.registro.id);
                 navigate('/proyectos');
             }
         }

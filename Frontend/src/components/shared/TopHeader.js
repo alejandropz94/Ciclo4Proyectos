@@ -6,7 +6,8 @@ import Mision from '../../assets/Mision.png'
 function TopHeader() {
 
   const handleLogout = e => {
-    sessionStorage.clear();
+    localStorage.setItem("token", "");
+    localStorage.setItem("id", "");
   }
 
   return (
@@ -115,7 +116,7 @@ function TopHeader() {
                 height="32"
                 className="rounded-circle me-2"
               ></img>
-              <strong>{sessionStorage.getItem("nombre")}</strong>
+              <strong>{localStorage.getItem("nombre")}</strong>
             </a>
             <ul
               className="dropdown-menu dropdown-menu-dark text-small shadow"

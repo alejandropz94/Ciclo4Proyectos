@@ -1,11 +1,20 @@
 import { Advance } from './advance.js'
+import mongoose from 'mongoose';
 
 export const resolverAvance = {
     Query: {
         getAllAvances: async () => {
             const advances = await Advance.find().populate("proyecto").populate("creador");
             return advances;
-        }
+        },
+        getAvanceByCreador: async (_, { _id }) => {
+            const advances = await Advance.find({creador: mongoose.Types.ObjectId(_id)}).populate("creador").populate("proyecto");
+            return advances;
+        },
+        getAvance: async (_, { _id }) => {
+            const advance = await Advance.findById(_id).populate("proyecto").populate("creador");
+            return advance;
+        }          
     },
     Mutation: {
         crearAvance: async (_, { input }) => {

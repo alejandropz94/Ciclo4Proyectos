@@ -4,7 +4,7 @@ const tiposAutenticacion = gql`
 
 type Token{
     token:String
-    error:String
+    id:String
 }
 
 type Mutation{

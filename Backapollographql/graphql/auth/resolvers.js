@@ -25,7 +25,8 @@ const resolversAutenticacion = {
                     identificacion: usuarioCreado.identificacion,
                     correo: usuarioCreado.correo,
                     rol: usuarioCreado.rol,
-                })
+                }),
+                id: usuarioCreado._id
             }
         },
     },
