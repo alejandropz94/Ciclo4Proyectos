@@ -3,7 +3,9 @@ import { gql } from "apollo-server-express";
 const tiposProyecto = gql`
     type Query {
         getAllProjects: [Project],
-        getProjectByLider(_id: ID): [Project]
+        getProjectsByLider(_id: ID): [Project]
+        getProject(_id: ID): Project
+
     }
 
     type Usuario {

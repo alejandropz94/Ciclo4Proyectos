@@ -7,10 +7,14 @@ export const resolverProyecto = {
             const projects = await Project.find().populate("lider");
             return projects;
         },
-        getProjectByLider: async (_, { _id }) => {
-            const project = await Project.find({lider: mongoose.Types.ObjectId(_id)});
+        getProjectsByLider: async (_, { _id }) => {
+            const project = await Project.find({lider: mongoose.Types.ObjectId(_id)}).populate("lider");
             return project;
-        }
+        },
+        getProject: async (_, { _id }) => {
+            const project = await Project.findById(_id);
+            return project;
+        }        
     },
     Mutation: {
         createProject: async (_, { input }) => {
