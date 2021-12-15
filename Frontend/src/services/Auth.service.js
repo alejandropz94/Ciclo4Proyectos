@@ -23,20 +23,11 @@ const REGISTRO = gql`
         }`;
 
 const LOGIN = gql`
-    mutation Login(
-        $correo: String!,
-        $password: String!
-        ){
-        login(
-            correo: $correo, 
-            password: $password
-            ) 
-            {
-                token,
-                error
-            }
-        }
-        
+mutation Mutation($correo: String!, $password: String!) {
+    login(correo: $correo, password: $password) {
+      token
+    }
+  }
 
 `
 export {REGISTRO, LOGIN}
