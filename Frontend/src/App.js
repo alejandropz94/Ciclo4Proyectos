@@ -12,13 +12,23 @@ import MainUsuarios from './components/usuarios/MainUsuarios';
 import MainAvances from './components/avances/MainAvances';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
+import PerfilEditar from './components/usuarios/PerfilEditar';
 
 
+const client = new ApolloClient({
+  uri: `${process.env.REACT_APP_API_URL}/graphql`,
+  cache: new InMemoryCache(),
+});
 function App() {
-  const client = new ApolloClient({
-    uri: `${process.env.REACT_APP_API_URL}/graphql`,
-    cache: new InMemoryCache(),
-  });
+
+  const [authToken, setAuthToken] = useState('');
+
+  const setToken = (token) =>{
+    setAuthToken(token)
+    if(token){
+      localStorage.setItem('token', JSON.stringify(token))
+    }
+  }
 
 
   return (
@@ -36,6 +46,11 @@ function App() {
               <Route exact="true" path="/usuarios" element={<MainUsuarios />} >
               </Route>
 
+              <Route
+                  path='/usuarios/editar/:_id'
+                  element={<PerfilEditar />}
+                />
+              
               <Route exact="true" path="/avances" element={<MainAvances />} >
               </Route>              
             </Routes>

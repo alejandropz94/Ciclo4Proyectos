@@ -17,6 +17,15 @@ type Mutation{
         estado: Enum_estadoUsuario
         password: String!
     ): Token!
+
+    login(
+        correo: String!
+        password: String!
+    ): Token!
+
+    validateToken(
+        token:String!
+    ):Token!
 }
 `;
 

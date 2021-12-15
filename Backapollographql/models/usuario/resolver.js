@@ -40,10 +40,13 @@ const resolverUsuario = {
                 identificacion: args.identificacion,
                 correo: args.correo,
                 rol: args.rol,
-                estado: args.estado
-            });
+                estado: args.estado,
+                password: passw
+            },
+            { new: true }
+            );
+            console.log(usuarioEditado)
             return usuarioEditado;
-
         }
     }
 

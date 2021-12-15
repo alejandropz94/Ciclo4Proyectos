@@ -29,6 +29,25 @@ const resolversAutenticacion = {
                 id: usuarioCreado._id
             }
         },
+
+        login: async(parent, args) =>{
+            const usuariolog = await User.findOne({correo: args.correo})
+            const pass = await bcrypt.compare(args.password, usuariolog.password)
+            if(pass){
+                return {
+                    token: createToken({
+                        _id: usuariolog._id,
+                        nombre:usuariolog.nombre,
+                        apellido:usuariolog.apellido,
+                        identificacion: usuariolog.identificacion,
+                        correo: usuariolog.correo,
+                        rol: usuariolog.rol,
+                    })
+                }
+            }
+            return {token: "estas llegando a backend"}
+
+        },
     },
 }
 
