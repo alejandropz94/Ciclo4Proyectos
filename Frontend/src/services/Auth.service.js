@@ -18,10 +18,9 @@ const REGISTRO = gql`
             password: $password
             ){
                 token,
-                error
+                id
             }
-        }
-`;
+        }`;
 
 const LOGIN = gql`
     mutation Login(

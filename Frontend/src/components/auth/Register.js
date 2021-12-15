@@ -4,10 +4,9 @@ import useFormData from '../../hooks/useFormData'
 import { useMutation } from '@apollo/client'
 import { REGISTRO } from '../../services/Auth.service'
 import {useNavigate} from 'react-router-dom'
-import { useAuth} from '../../context/authContext'
 
 const Register = () => {
-    const setToken = useAuth();
+
     const navigate = useNavigate();
 
     const { form, formData, updateFormData } = useFormData();
@@ -24,11 +23,11 @@ const Register = () => {
         console.log('Data Mutation', dataMutation);
         if(dataMutation){
             if(dataMutation.registro.token){
-                setToken(dataMutation.registro.token);
+                localStorage.setItem("token", dataMutation.registro.token);
                 navigate('/proyectos');
             }
         }
-    },[dataMutation, setToken, navigate])
+    },[dataMutation])
 
     return (
         <Fragment>
