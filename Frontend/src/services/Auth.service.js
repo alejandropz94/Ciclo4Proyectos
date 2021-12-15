@@ -18,7 +18,7 @@ const REGISTRO = gql`
             password: $password
             ){
                 token,
-                error
+                id
             }
         }
 `

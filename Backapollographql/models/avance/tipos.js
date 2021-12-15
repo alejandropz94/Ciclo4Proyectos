@@ -3,6 +3,8 @@ import { gql } from "apollo-server-express";
 const tiposAvance = gql`
     type Query {
         getAllAvances: [Avance]
+        getAvanceByCreador(_id: ID): [Avance]
+        getAvance(_id: ID): Avance
     }
 
     type Usuario {

@@ -5,29 +5,29 @@ import FilaTabla from './FilaTabla';
 import {
     ApolloClient,
     InMemoryCache,
-    gql, createHttpLink
+    gql, 
 } from "@apollo/client";
 
-import { setContext } from '@apollo/client/link/context';
 
 import notie from 'notie';
 import 'notie/dist/notie.css';
 
 function TablaProyectos() {
 
-    // const httpLink = createHttpLink({
-    //     uri: '/graphql',
+    // const httpLink = new HttpLink({
+    //     uri: '/graphql'
     //   });
 
     //   const authLink = setContext((_, { headers }) => {
+    //       console.log(headers);
     //     const token = localStorage.getItem('token');
     //     return {
     //       headers: {
-    //         authorization: token ? `${token}` : "",
+    //         ...headers,
+    //         authorization: token ? `Bearer ${token}` : "",
     //       }
     //     }
-    //   });      
-
+    //   });
     const client = new ApolloClient({
         uri: `${process.env.REACT_APP_API_URL}/graphql`,
         cache: new InMemoryCache()
@@ -172,7 +172,7 @@ function TablaProyectos() {
                             let dateString2 = new Date(Number(proyecto.fechaFin)).toISOString().split("T")[0];
                             setFechaFinal(dateString2);
                         }
-                    });
+                    }).catch(e => console.log(e));
             } catch (error) {
                 console.log(error);
             }
@@ -185,10 +185,8 @@ function TablaProyectos() {
     let isDisabled = false;
     if (editar && (fechaInicio === "" || estado === "" || fase === "")) {
         isDisabled = true;
-        console.log("entra por editar");
     } else if (!editar && (nombre == "" || presupuesto == "" || fechaInicio === "" || estado === "" || fase === "")) {
         isDisabled = true;
-        console.log("entra por ingresar");
     }
     else {
         isDisabled = false;
@@ -208,10 +206,6 @@ function TablaProyectos() {
                                 >
                                     Crear Proyecto
                                 </button>
-                            </div>
-                            <div class="col-4 offset-md-5 offset-lg-5">
-                                <input type="text" class="form-control" id="campoBuscar" placeholder="Buscar proyecto"
-                                />
                             </div>
                         </div>
                         <table className="table table-striped">

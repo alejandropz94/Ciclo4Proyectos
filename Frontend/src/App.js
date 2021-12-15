@@ -9,6 +9,7 @@ import './styles/estilos.css';
 import { ApolloProvider, ApolloClient,InMemoryCache } from '@apollo/client';
 import MainProyectos from './components/proyectos/MainProyectos';
 import MainUsuarios from './components/usuarios/MainUsuarios';
+import MainAvances from './components/avances/MainAvances';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 
@@ -34,6 +35,9 @@ function App() {
 
               <Route exact="true" path="/usuarios" element={<MainUsuarios />} >
               </Route>
+
+              <Route exact="true" path="/avances" element={<MainAvances />} >
+              </Route>              
             </Routes>
           </Router>
       </ApolloProvider>
