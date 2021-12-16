@@ -17,9 +17,10 @@ function TopHeader() {
     correo: decoded.correo,
     rol: decoded.rol,
   };
-
+  localStorage.setItem("id", usuario._id);
   const handleLogout = e => {
-    localStorage.setItem("token", "");
+    localStorage.removeItem("token");
+    localStorage.removeItem("id")
     navigate("/auth/login");
     
   }
@@ -114,14 +115,14 @@ function TopHeader() {
                 height="32"
                 className="rounded-circle me-2"
               ></img>
-              <span>{usuario.nombre + usuario.apellido}</span>
+              <span>{usuario.nombre} {usuario.apellido}</span>
             </a>
             <ul
               className="dropdown-menu dropdown-menu-dark text-small shadow"
               aria-labelledby="dropdownUser1"
             >
               <li>
-                <a className="dropdown-item" onClick={handleLogout} href="/">
+                <a className="dropdown-item" onClick={handleLogout} href="/auth/login">
                   Cerrar sesión
                 </a>
               </li>
