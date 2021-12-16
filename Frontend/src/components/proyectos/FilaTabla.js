@@ -5,12 +5,46 @@ import {
     InMemoryCache,
     gql
 } from "@apollo/client";
+import jwtDecode from "jwt-decode";
 
 function FilaTabla(props) {
     const client = new ApolloClient({
         uri: `${process.env.REACT_APP_API_URL}/graphql`,
         cache: new InMemoryCache()
     });
+
+    const token = localStorage.getItem('token');
+    const decoded = jwtDecode(token);
+    const usuario = {
+      _id: decoded._id,
+      nombre: decoded.nombre,
+      apellido: decoded.apellido,
+      identificacion: decoded.identificacion,
+      correo: decoded.correo,
+      rol: decoded.rol,
+    };
+
+    const QUERY_GETALLPROJECTS = gql`
+    query Query {
+        getAllProjects {
+          _id
+          nombre
+          presupuesto
+          fechaInicio
+          fechaFin
+          estado
+          fase
+          lider {
+            _id
+            nombre
+            apellido
+          }
+          objetivos {
+            descripcion
+            tipo
+          }
+        }
+      }`;    
     
     const QUERY_GETPROJECTSBYLIDER = gql`
     query Query($id: ID) {
@@ -43,7 +77,8 @@ function FilaTabla(props) {
 
     const getProyectos = async function () {
         try {
-            client
+            if(usuario.rol == "LIDER") {
+                client
                 .query({
                     query: QUERY_GETPROJECTSBYLIDER,
                     variables: { id: localStorage.getItem("id")}
@@ -52,6 +87,17 @@ function FilaTabla(props) {
                     console.log(result);
                     setProyectos(result.data.getProjectsByLider);
                 });
+            }else if (usuario.rol == "ADMINISTRADOR" || usuario.rol == "ESTUDIANTE") {
+                client
+                .query({
+                    query: QUERY_GETALLPROJECTS
+                })
+                .then(result => {
+                    console.log(result);
+                    setProyectos(result.data.getAllProjects);
+                });
+            }
+
         } catch (error) {
             console.log(error);
         }

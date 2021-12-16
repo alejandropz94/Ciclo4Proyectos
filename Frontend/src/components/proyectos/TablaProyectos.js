@@ -7,13 +7,23 @@ import {
     InMemoryCache,
     gql, 
 } from "@apollo/client";
-
+import jwtDecode from "jwt-decode";
 
 import notie from 'notie';
 import 'notie/dist/notie.css';
 
 function TablaProyectos() {
 
+    const token = localStorage.getItem('token');
+    const decoded = jwtDecode(token);
+    const usuario = {
+      _id: decoded._id,
+      nombre: decoded.nombre,
+      apellido: decoded.apellido,
+      identificacion: decoded.identificacion,
+      correo: decoded.correo,
+      rol: decoded.rol,
+    };
     // const httpLink = new HttpLink({
     //     uri: '/graphql'
     //   });
@@ -32,7 +42,8 @@ function TablaProyectos() {
         uri: `${process.env.REACT_APP_API_URL}/graphql`,
         cache: new InMemoryCache()
     });    
-    
+
+
     const QUERY_GETPROJECT = gql`
     query GetProject($_id: ID) {
         getProject(_id: $_id) {
@@ -199,13 +210,17 @@ function TablaProyectos() {
                     <div className="col col-lg-10">
                         <div className="row">
                             <div className="col-auto">
-                                <button
-                                    className="btn btn-success mb-3"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#modalProyecto"
-                                >
-                                    Crear Proyecto
-                                </button>
+                                {
+                                
+                                (usuario.rol == "LIDER") ?                                 <button
+                                className="btn btn-success mb-3"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalProyecto"
+                            >
+                                Crear Proyecto
+                            </button> : ""
+                                }
+
                             </div>
                         </div>
                         <table className="table table-striped">

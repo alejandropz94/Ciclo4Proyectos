@@ -36,6 +36,7 @@ const resolverUsuario = {
         editarUsuario: async (parent, args) =>{
             const salt = await bcrypt.genSalt(10);
             const passw = await bcrypt.hash(args.password, salt);
+            
             const usuarioEditado = await User.findByIdAndUpdate(args._id, {
                 nombre: args.nombre,
                 apellido: args.apellido,
@@ -47,7 +48,7 @@ const resolverUsuario = {
             },
             { new: true }
             );
-            console.log(usuarioEditado)
+            
             return usuarioEditado;
         }
     }

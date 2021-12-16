@@ -50,16 +50,17 @@ function TablaAvances() {
         }
       }`;
 
-    const CREATE_PROJECT = gql`
-      mutation Mutation($input: ProjectInput) {
-        createProject(input: $input) {
-          nombre
-          presupuesto
-          fechaInicio
-          fechaFin
-          estado
-          fase
-          lider {
+    const CREATE_ADVANCE = gql`
+    mutation Mutation($input: AvanceInput) {
+        crearAvance(input: $input) {
+          _id
+          fecha
+          descripcion
+          observaciones
+          proyecto {
+            _id
+          }
+          creador {
             _id
           }
         }
