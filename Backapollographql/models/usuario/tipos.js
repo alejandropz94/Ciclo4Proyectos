@@ -2,6 +2,11 @@ import { gql } from "apollo-server-express";
 
 const tiposUsuario = gql`
 
+type Token{
+    token:String
+    id:String
+}
+
     enum Enum_estadoUsuario{
         PENDIENTE
         AUTORIZADO
@@ -22,6 +27,16 @@ const tiposUsuario = gql`
         correo: String!
         rol: Enum_rol!
         estado: Enum_estadoUsuario
+    }
+
+    type Usuario2 {
+        nombre: String!
+        apellido: String!
+        identificacion: String!
+        correo: String!
+        rol: Enum_rol!
+        estado: Enum_estadoUsuario
+        token: Token
     }
 
     type Query{

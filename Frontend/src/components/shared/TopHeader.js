@@ -7,8 +7,8 @@ import jwtDecode from "jwt-decode";
 function TopHeader() {
 
   const navigate = useNavigate();
-  const token = localStorage.getItem('token')
-  const decoded = jwtDecode(token)
+  const token = localStorage.getItem('token');
+  const decoded = jwtDecode(token);
   const usuario = {
     _id: decoded._id,
     nombre: decoded.nombre,

@@ -23,6 +23,7 @@ const EDITAR_USUARIO = gql`
     $correo: String!
     $estado: String!
     $password: String!
+    $rol: String!
   ) {
     editarUsuario(
       _id: $_id
@@ -32,6 +33,7 @@ const EDITAR_USUARIO = gql`
       correo: $correo
       estado: $estado
       password: $password
+      rol: $rol
     ) {
       _id
       nombre

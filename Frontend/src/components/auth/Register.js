@@ -5,6 +5,9 @@ import { useMutation } from '@apollo/client'
 import { REGISTRO } from '../../services/Auth.service'
 import {useNavigate} from 'react-router-dom'
 
+import notie from 'notie';
+import 'notie/dist/notie.css';
+
 const Register = () => {
 
     const navigate = useNavigate();
@@ -23,8 +26,12 @@ const Register = () => {
         console.log('Data Mutation', dataMutation);
         if(dataMutation){
             if(dataMutation.registro.token){
+                notie.alert({
+                    type: 'success',
+                    text: "Registrado correctamente",
+                });
                 localStorage.setItem("token", dataMutation.registro.token);
-                navigate('/proyectos');
+                setTimeout(() => { window.location.href = "/auth/login" }, 1000);
             }
         }
     },[dataMutation])
