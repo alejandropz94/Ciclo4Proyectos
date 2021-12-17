@@ -7,17 +7,51 @@ import {
     InMemoryCache,
     gql
 } from "@apollo/client";
-
+import jwtDecode from "jwt-decode";
 
 import notie from 'notie';
 import 'notie/dist/notie.css';
 
 function TablaAvances() {
 
+    const token = localStorage.getItem('token');
+    const decoded = jwtDecode(token);
+    const usuario = {
+      _id: decoded._id,
+      nombre: decoded.nombre,
+      apellido: decoded.apellido,
+      identificacion: decoded.identificacion,
+      correo: decoded.correo,
+      rol: decoded.rol,
+    };
+
     const client = new ApolloClient({
         uri: `${process.env.REACT_APP_API_URL}/graphql`,
         cache: new InMemoryCache()
     });
+    const [proyectos, setProyectos] = useState([]);
+    
+    const QUERY_GETALLPROJECTS = gql`
+    query Query {
+        getAllProjects {
+          _id
+          nombre
+          presupuesto
+          fechaInicio
+          fechaFin
+          estado
+          fase
+          lider {
+            _id
+            nombre
+            apellido
+          }
+          objetivos {
+            descripcion
+            tipo
+          }
+        }
+      }`;      
 
     const QUERY_GETAVANCE = gql`
     query GetAvance($id: ID) {
@@ -37,18 +71,6 @@ function TablaAvances() {
         }
       }`;
 
-    const UPDATE_PROJECT = gql`
-      mutation UpdateProject($id: ID, $input: ProjectUpdate) {
-        updateProject(_id: $id, input: $input) {
-          _id
-          nombre
-          presupuesto
-          fechaInicio
-          fechaFin
-          estado
-          fase
-        }
-      }`;
 
     const CREATE_ADVANCE = gql`
     mutation Mutation($input: AvanceInput) {
@@ -75,6 +97,10 @@ function TablaAvances() {
         getAvance();
     }, [idAvanceEditar]);
 
+    useEffect(() => {
+        getProyectos();
+    }, []);
+
     const [fecha, setFecha] = useState("");
     const [descripcion, setDescripcion] = useState();
     const [observaciones, setObservaciones] = useState("");
@@ -89,54 +115,49 @@ function TablaAvances() {
         setObservaciones("");
         setProyecto("");
     }
+
+    const getProyectos = async function () {
+        try {
+            client
+            .query({
+                query: QUERY_GETALLPROJECTS
+            })
+            .then(result => {
+                console.log(result);
+                setProyectos(result.data.getAllProjects);
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const handleSubmit = e => {
-    };
-    // const handleSubmit = e => {
-    //     e.preventDefault();
-    //     const proyecto = {
-    //         nombre,
-    //         presupuesto: Number(presupuesto),
-    //         fechaInicio: fechaInicio == "" ? null : fechaInicio,
-    //         fechaFin: fechaFin == "" ? null : fechaFin,
-    //         estado,
-    //         fase
-    //     };
-    //     proyecto["lider"] = localStorage.getItem("id");
-    //     if (editar) {
-    //         client.mutate({
-    //             mutation: UPDATE_PROJECT,
-    //             variables: {
-    //                 id: idProyectoEditar,
-    //                 input: proyecto
-    //             }
-    //         }).then(result => {
-    //             document.querySelector('.closeModalProyecto').click();
-    //             notie.alert({
-    //                 type: 'success',
-    //                 text: "Proyecto actualizado correctamente",
-    //             });
-    //             setTimeout(() => { window.location.href = "/proyectos" }, 1500);
-    //         }).catch(error => {
-    //             console.log(error);
-    //         });
-    //     }else{
-    //         client.mutate({
-    //             mutation: CREATE_PROJECT,
-    //             variables: {
-    //                 input: proyecto
-    //             }
-    //         }).then(result => {
-    //             document.querySelector('.closeModalAvance').click();
-    //             notie.alert({
-    //                 type: 'success',
-    //                 text: "Proyecto ingresado correctamente",
-    //             });
-    //             setTimeout(() => { window.location.href = "/proyectos" }, 1500);
-    //         }).catch(error => {
-    //             console.log(error);
-    //         });
-    //     }
-    // }
+        e.preventDefault();
+        const avance = {
+            fecha,
+            descripcion,
+            observaciones,
+            proyecto
+        };
+        avance["creador"] = localStorage.getItem("id");
+        if (!editar) {
+            client.mutate({
+                mutation: CREATE_ADVANCE,
+                variables: {
+                    input: avance
+                }
+            }).then(result => {
+                document.querySelector('.closeModalAvance').click();
+                notie.alert({
+                    type: 'success',
+                    text: "Avance ingresado correctamente",
+                });
+                setTimeout(() => { window.location.href = "/avances" }, 1500);
+            }).catch(error => {
+                console.log(error);
+            });
+        }
+    }
 
     const getAvance = async function () {
         setEditar(true);
@@ -168,16 +189,6 @@ function TablaAvances() {
     }
 
     let isDisabled = false;
-    // if (editar && (fechaInicio === "" || estado === "" || fase === "")) {
-    //     isDisabled = true;
-    //     console.log("entra por editar");
-    // } else if (!editar && (nombre == "" || presupuesto == "" || fechaInicio === "" || estado === "" || fase === "")) {
-    //     isDisabled = true;
-    //     console.log("entra por ingresar");
-    // }
-    // else {
-    //     isDisabled = false;
-    // }
     return (
         <Fragment>
             <div className="col-xl-10 col-md-10">
@@ -186,13 +197,16 @@ function TablaAvances() {
                     <div className="col col-lg-10">
                         <div className="row">
                             <div className="col-auto">
-                                <button
+                                {
+                                    (usuario.rol == "ESTUDIANTE") ?                                 <button
                                     className="btn btn-success mb-3"
                                     data-bs-toggle="modal"
                                     data-bs-target="#modalAvance"
                                 >
                                     Crear Avance
-                                </button>
+                                </button> : ""
+                                }
+
                             </div>
                         </div>
                         <table className="table table-striped">
@@ -238,7 +252,7 @@ function TablaAvances() {
                                     <div className="row">
                                         <div className="mb-3">
                                             <label htmlFor="fecha" className="form-label">Fecha:</label>
-                                            <input type="text" className="form-control" id="fecha"
+                                            <input type="date" className="form-control" id="fecha"
                                                 onChange={e => setFecha(e.target.value)}
                                                 value={fecha} />
                                         </div>
@@ -260,11 +274,17 @@ function TablaAvances() {
                                         </div>
                                     </div>
                                     <div className="row">
-                                        <div className="col">
+                                    <div className="col">
                                             <label htmlFor="proyecto" className="form-label">Proyecto:</label>
-                                            <input type="input" className="form-control" id="proyecto"
-                                                onChange={e => setProyecto(e.target.value)} readOnly
-                                                value={proyecto} />
+                                            <select className="form-select" onChange={e => setProyecto(e.target.value)}
+                                                value={proyecto}>
+                                                <option disabled selected value="">Seleccione</option>
+                                                {
+                                                proyectos.map((proyecto,index )=> (
+                                                    <option value={proyecto._id}>{proyecto.nombre}</option>
+                                                ))
+                                            }    
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
