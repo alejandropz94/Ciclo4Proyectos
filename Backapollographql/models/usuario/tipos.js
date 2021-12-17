@@ -52,6 +52,7 @@ type Token{
             correo: String!
             rol: Enum_rol!
             estado: Enum_estadoUsuario
+            password: String!
         ):Usuario
 
         eliminarUsuario(_id:String!):Usuario

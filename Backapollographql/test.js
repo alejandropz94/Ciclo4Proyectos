@@ -14,27 +14,27 @@ const server = new ApolloServer({
   resolvers: resolvers,
 });
 
-// it('create user', async () => {
-//     const result = await server.executeOperation({
-//       query: gql`
-//       mutation Mutation($nombre: String!, $apellido: String!, $identificacion: String!, $correo: String!, $rol: Enum_rol!, $password: String!) {
-//         crearUsuario(nombre: $nombre, apellido: $apellido, identificacion: $identificacion, correo: $correo, rol: $rol, password: $password) {
-//             correo
-//         }
-//       }
-//       `,
-//       variables: {
-//         nombre: 'test ciclo 4',
-//         apellido: 'test',
-//         identificacion: 'test',
-//         correo: 'testing@testing.com',
-//         rol: 'ADMINISTRADOR',
-//         password: 'test',
-//       },
-//     });
+it('create user', async () => {
+    const result = await server.executeOperation({
+      query: gql`
+      mutation Mutation($nombre: String!, $apellido: String!, $identificacion: String!, $correo: String!, $rol: Enum_rol!, $password: String!) {
+        crearUsuario(nombre: $nombre, apellido: $apellido, identificacion: $identificacion, correo: $correo, rol: $rol, password: $password) {
+            correo
+        }
+      }
+      `,
+      variables: {
+        nombre: 'test ciclo 4',
+        apellido: 'test',
+        identificacion: 'test',
+        correo: 'testing@testing.com',
+        rol: 'ADMINISTRADOR',
+        password: 'test',
+      },
+    });
   
-//     assert.equal(result.data.crearUsuario.correo, 'testing@testing.com');
-//   });
+    assert.equal(result.data.crearUsuario.correo, 'testing@testing.com');
+  });
 
 
   it('Consultar Usuarios', async () => {
@@ -51,31 +51,30 @@ const server = new ApolloServer({
       `,
     });
   
-    assert.equal(result.data.Usuarios.length, 4);
+    assert.equal(result.data.Usuarios.length, 5);
   
     assert.equal(result.data.Usuarios[0].nombre, 'Luis');
   });
 
-//   it('Consulta Usuario', async () => {
-//     const result = await server.executeOperation({
-//       query: gql`
-//         query Usuario($id: String!) {
-//             Usuario(_id: $id) {
-//             nombre
-//             identificacion
-//             correo
-//             }
-//         }
-//       `,
-//       variables: {
-//         id: {
-//             id : "61bb7e68309a05653aa5b284"
-//         },
-//       },
-//     });
+  it('Consulta Usuario', async () => {
+    const result = await server.executeOperation({
+      query: gql`
+        query Usuario($id: String!) {
+            Usuario(_id: $id) {
+            nombre
+            identificacion
+            correo
+            }
+        
+        }
+      `,
+      variables: {
+        id : "61bb7e68309a05653aa5b284"
+      },
+    });
   
-//     assert.equal(result.data.Usuario.nombre, 'Alejandro');
-//   });
+    assert.equal(result.data.Usuario.nombre, 'Alejandro');
+  });
 
 it('Consultar Proyectos', async () => {
     const result = await server.executeOperation({
