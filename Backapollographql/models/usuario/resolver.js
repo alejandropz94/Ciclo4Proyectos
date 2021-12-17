@@ -2,7 +2,6 @@ import {User} from "./usuario.js";
 import bcrypt from "bcrypt"
 const resolverUsuario = {
 
-
     Query:{
         Usuarios: async () =>{
             const users = await User.find();
