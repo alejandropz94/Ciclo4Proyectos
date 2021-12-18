@@ -89,7 +89,7 @@ it('Consultar Proyectos', async () => {
       `,
     });
   
-    assert.equal(result.data.getAllProjects[0].nombre, 'proyecto');
+    assert.notEqual(result.data.getAllProjects.length, 0);
   });
 
   it('Eliminar Usuario', async () => {
@@ -109,6 +109,96 @@ it('Consultar Proyectos', async () => {
     assert.equal(result.data.eliminarUsuario.correo, 'testing@testing.com');
   });
  
+  it('Proyecto por id', async () => {
+    const result = await server.executeOperation({
+      query: gql`
+      query GetProject($_id: ID) {
+          getProject(_id: $_id) {
+            _id
+            nombre
+            presupuesto
+            fechaInicio
+            fechaFin
+            estado
+            fase
+          }
+        }`,
+        variables: {
+          _id : "61bb7e01309a05653aa5b279"
+        }
+    });
+  
+    assert.equal(result.data.getProject.nombre, 'proyecto');
+  });
 
+it('Proyecto por lider', async () => {
+  const result = await server.executeOperation({
+    query: gql`
+    query Query($id: ID) {
+        getProjectsByLider(_id: $id) {
+          _id
+          nombre
+        }
+      }`,
+      variables: {
+        id : "61bb7de9309a05653aa5b272"
+      }
+  });
+  assert.equal(result.data.getProjectsByLider[0].nombre, 'proyecto');
+});
 
+it('Crear proyecto', async () => {
+  const result = await server.executeOperation({
+    query: gql`
+    mutation Mutation($input: ProjectInput) {
+      createProject(input: $input) {
+        nombre
+        presupuesto
+        fechaInicio
+        fechaFin
+        estado
+        fase
+        lider {
+          _id
+        }
+      }
+    }`,
+    variables: {
+      input: {
+        nombre: "Proyecto test",
+        presupuesto: 10000000,
+        fechaInicio: "11/12/2021",
+        estado: "Activo",
+        fase: "Null",
+        lider: "61bb7e68309a05653aa5b284"
+      }
+  }
+  });
+  assert.equal(result.data.createProject.nombre, 'Proyecto test');
+});
 
+it('Avance por id', async () => {
+  const result = await server.executeOperation({
+    query: gql`
+    query GetAvance($id: ID) {
+        getAvance(_id: $id) {
+          _id
+          fecha
+          descripcion
+          observaciones
+          proyecto {
+            _id
+            nombre
+          }
+          creador {
+            _id
+            nombre
+          }
+        }
+      }`,
+      variables: {
+        id : "61bbe6253b36e81648d7bda9"
+      }
+  });
+  assert.equal(result.data.getAvance.descripcion, 'avance 002');
+});
