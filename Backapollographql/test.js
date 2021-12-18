@@ -51,7 +51,7 @@ it('create user', async () => {
       `,
     });
   
-    assert.equal(result.data.Usuarios.length, 5);
+    assert.equal(result.data.Usuarios.length, 4);
   
     assert.equal(result.data.Usuarios[0].nombre, 'Luis');
   });
@@ -91,5 +91,24 @@ it('Consultar Proyectos', async () => {
   
     assert.equal(result.data.getAllProjects[0].nombre, 'proyecto');
   });
+
+  it('Eliminar Usuario', async () => {
+    const result = await server.executeOperation({
+      query: gql`
+        mutation Mutation($id: String!) {
+          eliminarUsuario(_id: $id) {
+            correo
+          }
+        }
+      `,
+      variables: {
+        id : "61bd3aab427cc0b859f87f07"
+      },
+    });
+  
+    assert.equal(result.data.eliminarUsuario.correo, 'testing@testing.com');
+  });
+ 
+
 
 
